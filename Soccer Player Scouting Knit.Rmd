@@ -1,0 +1,166 @@
+---
+title: "Soccer Player Scouting Knit"
+author: "Zach Heyburn"
+date: "2023-03-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Soccer Player Scouting Project
+
+In this project, I gave myself the role of an analyst within a scouting department of a professional soccer club. I work for my favorite Premier League club Liverpool FC. My boss gives me the following assignment:
+
+Our superstar forward Sadio Mane is departing in the summer, and the club must find a replacement.Create a list of the most suitbale players for our scouts to watch in person or on film. Liverpool need a forward player who is under the age of 27. The player needs to have a skill set of an accurate shot, and the ability to hold on to the ball and create chances.
+
+# 1.) Import data set
+
+The first step in this assignment is to create a comprehensive database of players to analyze. Liverpool is one of the top clubs in the world, so only players playing in the most competitive leagues will be suitable.
+
+The website FBREF.com has vast databases of basic and advanced statistics for many players and leagues across the world. I chose 8 leagues, 7 of the best European leagues, and the top Brazillian league, to import and analyze. FBREF.com has many data sets of various statistics, but only certain statistics are relevant in the assignment. The shooting, chance creation, and possession data sets should give me a set of comprehensive analytics to find the right player. The data sets are also divided by season, so I used the previous completed season which is 2021-2022 season.
+
+I used the files tab to import the the 3 data sets from 8 leagues for a total of 24 data sets.
+
+```{r}
+library(readr)
+suppressMessages({
+Brasil_Serie_A_Chance_Creation_Player_Data_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Brasil Serie A 22/Brasil Serie A Chance Creation Player Data 22.csv")
+Brasil_Serie_A_Possession_Player_Data_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Brasil Serie A 22/Brasil Serie A Possession Player Data 22.csv")
+Brasil_Serie_A_Shooting_Player_Data_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Brasil Serie A 22/Brasil Serie A Shooting Player Data 22.csv")
+Bundesliga_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Bundesliga 21:22/Bundesliga  Possession Player Data 21:22.csv")
+Bundesliga_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Bundesliga 21:22/Bundesliga Chance Creation Player Data 21:22.csv")
+Bundesliga_Shooting_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Bundesliga 21:22/Bundesliga Shooting Player Data 21:22.csv")
+Eridivisie_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Eridivisie 21:22/Eridivisie Chance Creation Player Data 21:22.csv")
+Eridivisie_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Eridivisie 21:22/Eridivisie Possession Player Data 21:22.csv")
+Eridivisie_Shooting_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Eridivisie 21:22/Eridivisie Shooting Player Data 21:22.csv")
+La_Liga_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/La Liga 21:22/La Liga Chance Creation Player Data 21:22.csv")
+La_Liga_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/La Liga 21:22/La Liga Possession Player Data 21:22.csv")
+La_Liga_Shooting_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/La Liga 21:22/La Liga Shooting Player Data 21:22.csv")
+Liga_Primeira_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Liga Primeira 21:22/Liga Primeira Chance Creation Player Data 21:22.csv")
+Liga_Primeira_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Liga Primeira 21:22/Liga Primeira Possession Player Data 21:22.csv")
+Liga_Primeira_Shooting_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Liga Primeira 21:22/Liga Primeira Shooting Player Data 21:22.csv")
+Ligue_1_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Ligue 1 21:22/Ligue 1 Chance Creation Player Data 21:22.csv")
+Ligue_1_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Ligue 1 21:22/Ligue 1 Possession Player  Data 21:22.csv")
+Ligue_1_Shooting_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Ligue 1 21:22/Ligue 1 Shooting Player Data 21:22.csv")
+Premier_League_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Premier League 21:22/Premier League Chance Creation Player Data 21:22.csv")
+Premier_League_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Premier League 21:22/Premier League Possession Player  Data 21:22.csv")
+Premier_League_Shooting_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Premier League 21:22/Premier League Shooting Data 21:22.csv")
+Serie_A_Chance_Creation_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Serie A 21:22/Serie A Chance Creation Player Data 21:22.csv")
+Serie_A_Possession_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Serie A 21:22/Serie A Possession Player Data 21:22.csv")
+Serie_A_Shooting_Player_Data_21_22 <- read_csv("Soccer Scouting Data Sets/Soccer Scouting Project/Serie A 21:22/Serie A Shooting Player Data 21:22.csv")
+})
+```
+
+# 2.) Create 3 large data sets based on the 3 stat sheets
+
+24 data sets would take a lot of time to work with individually, so I decided to combine the datsets into 3 large data sets. The specific column names of a league's data set in each column are identical to the other league's in the same category, so this made it easy to combine. I combined the data sets in each of the 3 categories (shooting, chance creation, possession) to create a massive list of players from various leagues. I now have 3 lists each with 4806 players.
+
+```{r}
+PossessionData <- rbind(Brasil_Serie_A_Possession_Player_Data_22, Bundesliga_Possession_Player_Data_21_22, Eridivisie_Possession_Player_Data_21_22, La_Liga_Possession_Player_Data_21_22, Liga_Primeira_Possession_Player_Data_21_22, Ligue_1_Possession_Player_Data_21_22, Premier_League_Possession_Player_Data_21_22, Serie_A_Possession_Player_Data_21_22)
+ChanceCreationData <- rbind(Brasil_Serie_A_Chance_Creation_Player_Data_22, Bundesliga_Chance_Creation_Player_Data_21_22, Eridivisie_Chance_Creation_Player_Data_21_22, La_Liga_Chance_Creation_Player_Data_21_22, Liga_Primeira_Chance_Creation_Player_Data_21_22, Ligue_1_Chance_Creation_Player_Data_21_22, Premier_League_Chance_Creation_Player_Data_21_22, Serie_A_Chance_Creation_Player_Data_21_22)
+ShootingData <- rbind(Brasil_Serie_A_Shooting_Player_Data_22, Bundesliga_Shooting_Player_Data_21_22, Eridivisie_Shooting_Player_Data_21_22, La_Liga_Shooting_Player_Data_21_22, Liga_Primeira_Shooting_Player_Data_21_22, Ligue_1_Shooting_Player_Data_21_22, Premier_League_Shooting_Data_21_22, Serie_A_Shooting_Player_Data_21_22)
+```
+
+# 3.) Modify data frames based off certain parameters
+
+According to the assignment, the first step of analysis should be removing the players in the wrong positon and wrong age group from the data set. Liverpool need a forward player under the age of 27.
+
+## - Shooting Data
+
+```{r}
+install.packages("dplyr")
+colnames(ShootingData) <- as.character(ShootingData[1,])
+ShootingData <- ShootingData[-1,]
+ShootingData$Age <- as.numeric(ShootingData$Age)
+ShootingDataFiltered1 <- subset(ShootingData, Age < 27)
+ShootingDataFiltered2 <- subset(ShootingDataFiltered1, Pos == "FW" | Pos == "MFFW" | Pos == "FWMF")
+```
+
+## - Chance Creation Data
+
+```{r}
+colnames(ChanceCreationData) <- as.character(ChanceCreationData[1,])
+ChanceCreationData <- ChanceCreationData[-1,]
+ChanceCreationData$Age <- as.numeric(ChanceCreationData$Age)
+ChanceCreationDataFiltered1 <- subset(ChanceCreationData, Age < 27)
+ChanceCreationDataFiltered2 <- subset(ChanceCreationDataFiltered1, Pos == "FW" | Pos == "MFFW" | Pos == "FWMF")
+```
+
+## - Possession Stats
+
+```{r}
+colnames(PossessionData) <- as.character(PossessionData[1,])
+PossessionData <- PossessionData[-1,]
+PossessionData$Age <- as.numeric(PossessionData$Age)
+PossessionDataFiltered1 <- subset(PossessionData, Age < 27)
+PossessionDataFiltered2 <- subset(PossessionDataFiltered1, Pos == "FW" | Pos == "MFFW" | Pos == "FWMF")
+```
+
+# 4.) From these players, find the top performers in certain categories
+
+Now that I have list of relevant players, I need to find the players performing best in certain areas of play. For each data set catergory, I will create subsets consisting of players performing above a certain percentile in the respective statistic.
+
+I also need to convert the the column types to numeric to perform the analysis
+
+## - Shooting Stats
+
+In the shooting category, I identified Total Goals, Total Shots, and Shot on Target % as relevant statistics to judge a forward player.
+
+```{r}
+ShootingDataFiltered2$Gls <- as.numeric(ShootingDataFiltered2$Gls)
+GlsSubset <- ShootingDataFiltered2[ShootingDataFiltered2$Gls>quantile(ShootingDataFiltered2$Gls,0.75),]
+ShootingDataFiltered2$Sh <- as.numeric(ShootingDataFiltered2$Sh)
+ShSubset <- ShootingDataFiltered2[ShootingDataFiltered2$Sh>quantile(ShootingDataFiltered2$Sh,0.75),]
+colnames(ShootingDataFiltered2)[12] ="SoTPercentage"
+ShootingDataFiltered2$SoTPercentage <- as.numeric(ShootingDataFiltered2$SoTPercentage)
+SoTPercentageSubset <- ShootingDataFiltered2[!(is.na(ShootingDataFiltered2$SoTPercentage)), ]
+SoTPercentageSubset <- SoTPercentageSubset[SoTPercentageSubset$SoTPercentage>quantile(SoTPercentageSubset$SoTPercentage,0.5),]
+```
+
+## - Chance Creation Stats
+
+In the chance creation category, I identified Total Goal Creating Actions and Goal Creating Actions per 90 minutes as relevant statistics to judge a forward player.
+
+```{r}
+ChanceCreationDataFiltered2 <- ChanceCreationDataFiltered2[!(is.na(ChanceCreationDataFiltered2$GCA)), ]
+ChanceCreationDataFiltered2$GCA <- as.numeric(ChanceCreationDataFiltered2$GCA)
+GCASubset <- ChanceCreationDataFiltered2[ChanceCreationDataFiltered2$GCA>quantile(ChanceCreationDataFiltered2$GCA,0.75),]
+ChanceCreationDataFiltered2 <- ChanceCreationDataFiltered2[!(is.na(ChanceCreationDataFiltered2$GCA90)), ]
+ChanceCreationDataFiltered2$GCA90 <- as.numeric(ChanceCreationDataFiltered2$GCA90)
+GCA90Subset <- ChanceCreationDataFiltered2[ChanceCreationDataFiltered2$GCA90>quantile(ChanceCreationDataFiltered2$GCA90,0.75),]
+```
+
+## - Possession Stats
+
+In the possession category, I identified Total Succesful Dribbles, Succesful Dribble %, and Progressive Carries as relevant statistics to judge a forward player.
+
+```{r}
+PossessionDataFiltered2 <- PossessionDataFiltered2[!(is.na(PossessionDataFiltered2$Succ)), ]
+PossessionDataFiltered2$Succ <- as.numeric(PossessionDataFiltered2$Succ)
+SuccSubset <- PossessionDataFiltered2[PossessionDataFiltered2$Succ>quantile(PossessionDataFiltered2$Succ,0.75),]
+colnames(PossessionDataFiltered2)[18] ="SuccPercantage"
+PossessionDataFiltered2 <- PossessionDataFiltered2[!(is.na(PossessionDataFiltered2$SuccPercantage)), ]
+PossessionDataFiltered2$SuccPercantage <- as.numeric(PossessionDataFiltered2$SuccPercantage)
+SuccPercantageSubset <- PossessionDataFiltered2[PossessionDataFiltered2$SuccPercantage>quantile(PossessionDataFiltered2$SuccPercantage,0.75),]
+PossessionDataFiltered2 <- PossessionDataFiltered2[!(is.na(PossessionDataFiltered2$PrgC)), ]
+PossessionDataFiltered2$PrgC <- as.numeric(PossessionDataFiltered2$PrgC)
+PrgCSubset <- PossessionDataFiltered2[PossessionDataFiltered2$PrgC>quantile(PossessionDataFiltered2$PrgC,0.75),]
+```
+
+# 5.) Create a data frame with players that appear in all of the statistical subsets
+
+I now have 8 subsets of players of the top performers in certain areas of the game. From these subsets, I wanted to create a list of players that appear in all of the 8 subsets. This subset titled "TopBallers" will identify them as the best players across many statistical categories.
+
+```{r}
+Ballers <- list(GlsSubset, ShSubset, SoTPercentageSubset, GCASubset, GCA90Subset, SuccSubset, SuccPercantageSubset, PrgCSubset)
+TopBallers <- Reduce(function(x, y) merge(x, y, by = "Player"), Ballers)
+TopBallers[2,"Player"] <- "Andre Silva 2"
+UniqueTopBallers<-unique(TopBallers$Player)
+print(UniqueTopBallers)
+```
+
+When I performed the reduce function, there were a few duplicate players. I could have avoided this had I properly cleaned the data before the analysis, however this is only a minor problem, as I could still remove the duplicates now and leave myself with the correct amount of players. After specifying there are in fact 2 different players named Andre Silva, I performed the unique function on the TopBallers subset. This left me with a manageable list of 17 players that were the best performers across many statistical categories. I could then submit this list to the scouts as the most suitable players for Liverpool to bring in.
+
+In fact, in real life Liverpool signed 2 of the players that were reported on my list: Luis Diaz and Cody Gakpo! This helps confirm that my analysis was accurate.
