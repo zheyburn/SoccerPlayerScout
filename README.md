@@ -1,6 +1,6 @@
 # SoccerPlayerScout
 
-https://zheyburn.github.io/SoccerPlayerScout/
+file:///Users/zachheyburn/Downloads/soccer%20scout/Soccer-Player-Scouting-Knit.html
 
 Hello,
 
